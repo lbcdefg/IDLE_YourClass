@@ -1,0 +1,102 @@
+/* Common styles */
+body {
+  font-family: "ptsans", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.btn {
+  outline: none;
+  color: white;
+  background-color: #00b98e;
+  box-shadow: 0 0 0 0;
+  margin-right: 3px;
+}
+
+.clearfix {
+  margin: 15px;
+}
+
+.form {
+  margin: auto;
+}
+
+.form input, .form select, .form textarea {
+  border-radius: 5px;
+  border: 1px solid #00b98e;
+  outline: none;
+  background: none;
+  padding: 5px;
+  width: 100%;
+}
+
+/* App styles */
+.title {
+  text-align: center;
+  margin: 10px;
+}
+
+.calendar {
+  width: 98%;
+  margin: auto;
+  font-size: 13px;
+}
+
+.calendar tr, .calendar td {
+  border: 1px solid black;
+}
+
+.calendar th {
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.calendar td {
+  width: 200px;
+  height: 150px;
+  padding: 20px 0px 0px 5px;
+}
+
+.month {
+  font-size: 25px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+ul {
+  height: 100%;
+  padding: 0px 5px 0px 20px;
+}
+
+a {
+  color: #00b98e;
+}
+
+#cal_btn {
+  outline: none;
+  color: white;
+  background-color: #00b98e;
+  box-shadow: 0 0 0 0;
+  margin-right: 3px;  
+}
+
+#cal_footer {
+  /* height: (footer높이); */
+  position : relative;
+  transform : translateY(-100%);
+}
+
+#cal_wrapper {
+  height: auto;
+  min-height: 100%;
+  /* padding-bottom: (footer높이);   */
+}

@@ -1,0 +1,35 @@
+package aa.bb;
+
+import java.lang.String;
+import java.lang.System;
+
+class A{
+	int age = 24;
+	String name = "홍길동";
+	A(){ 
+		//System.out.println("A()");
+    }
+	A(String name, int age){
+		this.name = name;
+		this.age = age;
+	}
+	void go(){
+		System.out.println("간다");
+	}
+	void eat(){
+		System.out.println("먹는다");
+	}
+}
+
+class AUser{
+	public static void main(String args[]){
+		A a1 = new A("이순신", 45); 
+		System.out.print("나이가 "+ a1.age + "인 " + a1.name + "이 ");
+		a1.eat();
+
+		A a2 = new A();
+		System.out.print("나이가 " + a2.age + "인 " + a2.name + "이 ");
+		a2.go();
+	}
+
+}

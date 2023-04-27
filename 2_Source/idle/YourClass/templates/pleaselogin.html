@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% if not request.session.email %}
+{% block contents %}
+
+    <!-- 페이지헤더 -->
+            <div class="container-xxl bg-primary page-header" style="margin-bottom: 0px;">
+                <div class="container text-center">
+                    <h1 class="text-white animated zoomIn mb-3" style="margin-bottom: 0; padding-bottom: 50px; padding-top: 50px;">로그인이 필요합니다</h1>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 로그인필요 + 회원가입 -->
+        <div class="container-xxl py-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="container text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
+                        <h1 class="display-1">앗</h1>
+                        <h1 class="mb-4">아직 회원이 아니신가요?</h1>
+                        <p class="mb-4">많은 혜택이준비되어있어용</p>
+                        <a class="btn btn-primary rounded-pill py-3 px-5" href="/signup">회원가입</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+{% endif %}

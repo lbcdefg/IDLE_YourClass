@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% include "pleaselogin.html" %}
+{% load static %}
+{% block contents %}
+
+
+        <!-- 페이지헤더 -->
+            <div class="container-xxl bg-primary page-header" style="margin-bottom: 0px; padding-bottom: 0px; padding-top:150px;">
+
+                <div class="container text-center">
+                    
+                    {% if pageTitle %}
+                        <h1 class="text-white animated zoomIn mb-3" style="margin-bottom: 0; padding-bottom: 50px; padding-top: 50px;">{{pageTitle}}</h1>
+                    {% else %}
+                        <h1 class="text-white animated zoomIn mb-3" style="margin-bottom: 0; padding-bottom: 50px; padding-top: 50px;">새글작성</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 메시지 -->
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- 글작성 시작 -->
+        <br>
+        <div class="container">
+            <br><br>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-dark" value="저장"/>
+            </form>
+        </div>
+        
+{% endblock %}

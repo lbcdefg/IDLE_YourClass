@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <script src="{% static '/js/trim.js' %}"></script>
+    <script language="javascript"> 
+        function check(){ //이메일과 비밀번호가 제대로 입력되었는지 확인한 후, 문제가 없으면 폼을 제출합니다. 
+            var idval = f.email.value.trim();
+            if(idval.length == 0){
+                alert("이메일을 넣어주세요");
+                f.email.value = "";
+                f.email.focus();
+                return false;
+            } else if (!checkByteLen(idval, 50)) {
+                alert("이메일이 너무 길어요");
+                f.email.focus();
+                return false;
+            }
+
+            var pwdval = f.password.value.trim();
+            if(pwdval.length == 0){
+                alert("비밀번호를 넣어주세요");
+                f.password.value = "";
+                f.password.focus();
+                return false;
+            } else if (!checkByteLen(pwdval, 30)) {
+                alert("비밀번호가 너무 길어요");
+                f.password.focus();
+                return false;
+            }
+
+            f.submit();
+        }
+
+        function checkByteLen(str, size){
+            var byteLen = getByteLen(str);
+            if(byteLen <= size){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        function getByteLen(str){
+        return str.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g,"$&$1$2").length;
+        }
+        
+        function enterCheck(elm){
+            if(event.keyCode == 13){
+                if(elm == f.email){
+                    f.name.focus();
+                }else{
+                    check();
+                }
+            }
+        }
+    </script>
+    <script src="{% static 'js/alert.js' %}"></script>
+    <meta charset="utf-8">
+    <title>YourClass - Team IDLE</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Mynerve&display=swap');
+	</style>
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css'%}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css'%}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css'%}" rel="stylesheet">
+</head>
+
+<body onload="document.f.email.focus()">
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar & Hero Start -->
+        <div class="container-xxl position-relative p-0">
+            <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+                <a href="/YourClass" class="navbar-brand p-0">
+                    <h1 class="m-0">YourClass</h1>
+                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+					<!-- 툴바 가장 앞의 내용은 : 비회원접속시 아무것도안뜸, 회원접속시 회원이름이 뜨고 이름을 클릭하면 마이페이지로 이동 -->
+					{% if session %}
+						<!-- 로그인페이지에서 인덱스로 리다이렉트될 때 세션과 Member.class(이따 아래에서 나옴), Member.name 가 넘어와야한다-->
+                        <a href='mypage' class="nav-item nav-link active">name</a>
+					{% endif %}
+                        <a href="calendar" class="nav-item nav-link">일정</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">게시판</a>
+                            <div class="dropdown-menu m-0">
+								<!-- 게시판명은 Models.py의 Categories 테이블의 name 컬럼의 값을 반복으로 넣어줘야함-->
+								{% comment %} {% for category in categories %}
+                                <a href="{{}}.html" class="dropdown-item">{{}}</a>
+								{% endfor %} {% endcomment %}
+                            </div>
+                        </div>
+                        <a href="board1" class="nav-item nav-link">자료실</a>
+                    </div>
+                    <a href="/YourClass/login" class="btn btn-light rounded-pill text-primary py-2 px-4 ms-lg-5">로그인</a>
+                </div>
+            </nav>
+
+            <div class="container-xxl bg-primary page-header">
+            </div>
+        </div>
+        <!-- Navbar & Hero End -->
+
+
+        <!-- Quote Start -->
+        <form name="f" action="signup_ok" method="POST">
+            {% csrf_token %}
+            <div class="container-xxl py-6">
+                <div class="container">
+                    <div class="mx-auto text-center wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                        <div class="d-inline-block border rounded-pill text-primary px-4 mb-3">YourClass</div>
+                        <h2 class="mb-5">회원가입 화면</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.3s">
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input name="email" type="email" class="form-control" id="email" placeholder="Your Email" onkeydown="enterCheck(this)">
+                                            <label for="email">Your@email.com</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="Your name" onkeydown="enterCheck(this)">
+                                            <label for="name">name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input name="password1" type="password" class="form-control" id="password1" placeholder="Your Password" onkeydown="enterCheck(this)">
+                                            <label for="name">Password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input name="password2" type="password" class="form-control" id="password2" placeholder="Your Password" onkeydown="enterCheck(this)">
+                                            <label for="name">Confirm Password</label>
+                                        </div>
+                                    </div>                                
+                                    <div class="col-12">
+                                        <div class="form-floating" style="font-size: 25px;">
+                                            직업선택 
+                                            <input type='radio' name='dept' value='선생님' onclick="showClassField()"/>선생님
+                                            <input type='radio' name='dept' value='학생' onclick="showCombo()"/>학생
+                                            <input type='radio' name='dept' value='팀장' onclick="showCombo()"/>팀장
+                                        </div><br>
+                                        <div id="classField" class="form-floating" style="display: none; font-size: 25px;">
+                                            클래스선택
+                                            <input type="text" name="classnames1" style="font-size: 25px;">
+                                        </div>
+                                        <div id="comboField" class="form-floating" style="display: none; font-size: 25px;">
+                                            클래스선택
+                                            <form>
+                                                <select name="classnames" style="font-size: 25px;">
+                                                    {% for classname in classnames %}
+                                                    <option value="{{classname}}">{{classname}}
+                                                    {% endfor %}
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        function showClassField() {
+                                            var classField = document.getElementById("classField");
+                                            var comboField = document.getElementById("comboField");
+                                            if (document.querySelector('input[name="dept"]:checked').value == "선생님") {
+                                                classField.style.display = "block";
+                                                comboField.style.display = "none";
+                                            } else {
+                                                classField.style.display = "none";
+                                            }
+                                        }
+                                        function showCombo() {
+                                            var comboField = document.getElementById("comboField");
+                                            var classField = document.getElementById("classField");
+                                            if (document.querySelector('input[name="dept"]:checked').value != "선생님") {
+                                                comboField.style.display = "block";
+                                                classField.style.display = "none";
+                                            } else {
+                                                comboField.style.display = "none";
+                                            }
+                                        }
+                                    </script>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100 py-3" type="submit">회원가입</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- Quote End -->
+        
+
+        <!-- Footer Start -->
+        <div class="container-fluid bg-dark text-light footer pt-5 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 6rem;">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <div class="col-md-6 col-lg-3">
+                        <h5 class="text-white mb-4">연락주실 곳</h5>
+                        <p><i class="fa fa-map-marker-alt me-3"></i>413</p>
+                        <p><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                        <p><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                        <div class="d-flex pt-2">
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <h5 class="text-white mb-4">Quick Link</h5>
+                        <a class="btn btn-link" href="">About Us</a>
+                        <a class="btn btn-link" href="">Contact Us</a>
+                        <a class="btn btn-link" href="">Privacy Policy</a>
+                        <a class="btn btn-link" href="">Terms & Condition</a>
+                        <a class="btn btn-link" href="">Career</a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <h5 class="text-white mb-4">Popular Link</h5>
+                        <a class="btn btn-link" href="">About Us</a>
+                        <a class="btn btn-link" href="">Contact Us</a>
+                        <a class="btn btn-link" href="">Privacy Policy</a>
+                        <a class="btn btn-link" href="">Terms & Condition</a>
+                        <a class="btn btn-link" href="">Career</a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <h5 class="text-white mb-4">Newsletter</h5>
+                        <p>Lorem ipsum dolor sit amet elit. Phasellus nec pretium mi. Curabitur facilisis ornare velit non vulpu</p>
+                        <div class="position-relative w-100 mt-3">
+                            <input class="form-control border-0 rounded-pill w-100 ps-4 pe-5" type="text" placeholder="Your Email" style="height: 48px;">
+                            <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-1 me-2"><i class="fa fa-paper-plane text-primary fs-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved. 
+							
+							<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+							Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                            <br>Distributed By: <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <div class="footer-menu">
+                                <a href="">Home</a>
+                                <a href="">Cookies</a>
+                                <a href="">Help</a>
+                                <a href="">FQAs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js'%}"></script>
+    <script src="{% static 'lib/easing/easing.min.js'%}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js'%}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js'%}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js'%}"></script>
+</body>
+
+</html>

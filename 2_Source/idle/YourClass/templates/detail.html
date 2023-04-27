@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% include "pleaselogin.html" %}
+{% load static %}
+{% block contents %}
+
+
+        <!-- 페이지헤더 -->
+            <div class="container-xxl bg-primary page-header" style="margin-bottom: 0px; padding-bottom: 0px; padding-top:150px;">
+                <div class="container text-center">
+                    <h1 class="text-white animated zoomIn mb-3" style="margin-bottom: 0; padding-bottom: 50px; padding-top: 0px;">글 상세보기</h1>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 메시지 -->
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- 글작성하기 -->
+        
+        <div class="container" style='padding-left:50px; padding-bottom:20px;'> 
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="mt-4">{{ post_detail.title }} [{{commentCount}}]</h1>
+                    <br/><br/><p >작성자: {{ postAuthor }}</p>
+                    <hr><p><span>작성일: {{ post_detail.date|date:"y/m/d H:i:s" }}&nbsp;&nbsp; 조회수:{{post_detail.viewcount}}</span></p>
+                    <hr>
+                    <br><br>
+                    <p class="lead">{{ post_detail.body | safe }}</p>
+                    {% if post_detail.filename %}
+                    <a class="btn btn-lg btn-primary" href="{% url 'post_download' post_detail.id %}">Download({{ post_detail.filename|truncatechars:25 }})</a>
+                    {% endif %}
+
+                    <br><br>
+                    <a class="btn btn-lg btn-primary" href="{% url 'updatepost' post_id %}" role="button">수정하기</a>
+                    &nbsp;&nbsp;
+                    <a class="btn btn-lg btn-primary" href="{% url 'deletepost' post_id %}" role="button">삭제하기</a>
+                    &nbsp;&nbsp;
+                    <a class="btn btn-lg btn-primary" href="{% url 'board_category' post_detail.category_id %}" role="button">목록으로</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-lg btn-primary" href="{% url 'like' post_id %}" role="button">추천하기</a>
+                </div>
+            </div>
+        </div>
+
+        <!--댓글 작성하기 -->
+        <div class="card my-4" style="width:100vh; margin-left:50px; margin-bottom:50px;">
+            <h5 class="card-header">Leave a Comment:</h5>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group" style="padding-bottom:10px">{{ comment_form }}</div>
+                    <button type="submit" class="btn btn-primary">댓글쓰기</button>
+                </form>
+            </div>
+        </div>
+
+        <!--댓글 뿌려주기 -->
+        {% for comment in comments %}
+        <!-- Single Comment -->
+        <div style='padding-left:50px;' class="media mb-4">
+            <div class="media-body">
+                <h6 class="mt-0">{{ comment.comment_user.name }} &nbsp;&nbsp;&nbsp;&nbsp;{{ comment.comment_date|date:"y/m/d H:i:s" }}</h6>
+                <p class="mt-0">{{ comment.comment_text }}</p>
+                &nbsp;&nbsp;
+                <span>
+                <a class="btn btn-lg btn-primary" href="{% url 'updateComment' comment.id%}" role="button"
+                    style="font-size:0.5em">수정하기</a>
+                &nbsp;&nbsp;
+                <a class="btn btn-lg btn-primary" href="{% url 'deleteComment' comment.id %}" role="button"
+                    style="font-size:0.5em">삭제하기</a>
+                </span>
+            </div>
+        </div>
+        {% empty %}
+        <div style="padding:50px;">
+            <h5 align='center'>아직 댓글이 없습니다</h5>
+        </div>
+        {% endfor %}
+        
+{% endblock %}

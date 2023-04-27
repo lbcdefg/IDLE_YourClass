@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% include "pleaselogin.html" %}
+{% load static %}
+{% block contents %}
+
+        <!-- 페이지헤더 -->
+        <div class="container-xxl bg-primary page-header" style="margin-bottom: 0px; padding-bottom: 0px; padding-top:150px;">
+            <div class="container text-center">
+                <h1 class="text-white animated zoomIn mb-3" style="margin-bottom: 0; padding-bottom: 50px; padding-top: 0px;">댓글수정</h1>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 메시지 -->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <!-- 글작성하기 -->
+    
+    <div class="container" style='padding-left:50px; padding-bottom:20px;'> 
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="mt-4">{{ post_detail.title }}</h1>
+                <br/><br/><p >작성자: {{ post_detail.author.name }}</p>
+                <hr><p><span>작성일: {{ post_detail.date|date:"y/m/d H:i:s" }}&nbsp;&nbsp; 조회수:{{post_detail.viewcount}}</span></p>
+                <hr>
+                <br><br>
+                <p class="lead">{{ post_detail.body | safe }}</p>
+                <br><br>
+
+            </div>
+        </div>
+    </div>
+    <div class="card my-4" style="width:100vh; margin-left:50px; margin-bottom:50px;">
+        <h5 class="card-header">Edit your Comment</h5>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group" style="padding-bottom:10px">{{ form }}</div>
+                <button type="submit" class="btn btn-primary">댓글수정</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

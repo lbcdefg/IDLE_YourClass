@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+{% block contents %}
+
+
+        <!-- 마스코트걸과 검색창 + 게시판목록은 세션유무에 따라 나와야함(회원만 볼 수 있는 화면) -->
+            <div class="container-xxl bg-primary page-header" style="padding-top:1px; padding-bottom:5px">
+            {% comment %} <div class="row g-5 align-items-center"> {% endcomment %}
+        <div class="container-xxl bg-primary my-6 wow fadeInUp"  data-wow-delay="0.1s">
+            
+            <div class="container px-lg-5" style="margin-left:120px">
+                
+                <div class="row align-items-center" style="height: 250px;">
+                    <div class="col-12 col-md-6">
+                        <h1 class="text-white">{{member.name}}&nbsp;
+                            {{member.dept}}
+                        </h1>
+                        <p><br/></p>
+                        <p><small class="text-white">EMAIL &nbsp;&nbsp;{{member.email}}</small></p>
+                        <p><small class="text-white">CLASS &nbsp;&nbsp;{{member.classnames_id}}</small></p>
+                    </div>
+                    
+                    <div class="col-lg-6 text-center text-lg-start">
+                        <div class="col-md-6 text-center mb-n5 d-none d-md-block">
+                            <img class="img-fluid mt-5" style="max-height: 250px; margin-left: 120px" src="{% static 'img/user.png'%}">
+
+                        </div>
+                        
+                    </div>
+                    <p>
+                        <span>
+                        <a href={% url "editinfo" %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">정보수정</a>&nbsp;&nbsp;
+                        {% if member.dept == '선생님' %}
+                            <a href={% url 'admin_board' %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">게시판관리</a>&nbsp;&nbsp;
+                            <a href={% url 'admin_member' %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">학생관리</a>
+                        {% endif %}
+                        </span>
+                    </p>
+                </div>
+                
+            </div>
+            
+            </div>
+        </div>
+        <!-- 마스코트걸과 검색창끝 -->
+
+        <!-- 메시지 -->
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- 게시판 수정창 -->
+        <div>
+            <center>
+                <h1>
+                    {{member.classnames_id}} CLASS 게시판 관리
+                </h1>
+                <div class="container">
+                    <br><br>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if not Cat_name %}
+                        <div>
+                            {{category_form}}
+                        </div>
+                        </br>
+                        <input type="submit" class="btn btn-dark" value="추가">
+                        {% else %}
+                        <div>
+                            <h5>게시판이름:&nbsp;&nbsp;&nbsp;{{Cat_name}}</h5>
+                            게시판이름은 수정 불가능합니다</br></br>
+                            {{categoryUpdate_form}}
+                        </div>
+                        </br>
+                        <input type="submit" class="btn btn-dark" value="수정">
+                        {% endif %}
+                    </form>
+                </div>
+            </br></br>
+            </center>
+        </div>
+        <!-- 게시판수정 끝 -->
+
+
+{% endblock %}

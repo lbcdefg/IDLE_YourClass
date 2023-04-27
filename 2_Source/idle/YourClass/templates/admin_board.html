@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block contents %}
+
+
+    <!-- 마스코트걸과 검색창 + 게시판목록은 세션유무에 따라 나와야함(회원만 볼 수 있는 화면) -->
+    <div class="container-xxl bg-primary page-header" style="padding-top:1px; padding-bottom:5px; margin-bottom:50px;">
+        <div class="container-xxl bg-primary my-6 wow fadeInUp"  data-wow-delay="0.1s">
+            <div class="container px-lg-5" style="margin-left:120px">
+                <div class="row align-items-center" style="height: 250px;">
+                    <div class="col-12 col-md-6">
+                        <h1 class="text-white">{{member.name}}&nbsp;
+                            {{member.dept}}
+                        </h1>
+                        <p><br/></p>
+                        <p><small class="text-white">EMAIL &nbsp;&nbsp;{{member.email}}</small></p>
+                        <p><small class="text-white">CLASS &nbsp;&nbsp;{{member.classnames_id}}</small></p>
+                    </div>
+                    
+                    <div class="col-lg-6 text-center text-lg-start">
+                        <div class="col-md-6 text-center mb-n5 d-none d-md-block">
+                            <img class="img-fluid mt-5" style="max-height: 250px; margin-left: 120px" src="{% static 'img/user.png'%}">
+                        </div>    
+                    </div>
+                    <p>
+                        <span>
+                        <a href={% url "editinfo" %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">정보수정</a>&nbsp;&nbsp;
+                        {% if member.dept == '선생님' %}
+                            <a href={% url 'admin_board' %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">게시판관리</a>&nbsp;&nbsp;
+                            <a href={% url 'admin_member' %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">학생관리</a>
+                        {% endif %}
+                        </span>
+                    </p>
+                </div>      
+            </div>    
+        </div>
+    </div>
+        <!-- 마스코트걸과 검색창끝 -->
+
+        <!-- 메시지 -->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+        <!-- 현재 보유한 게시판목록 -->
+        <div>
+            <center>
+                <h1>
+                    {{member.classnames_id}} CLASS 게시판
+                </h1>
+            </br>
+                <a class="btn btn-lg btn-primary" href="{% url 'createBoard' %}" role="button"
+                            style="font-size:0.5em">추가하기</a>
+            </br></br>
+                <table style="width:120vh; border-collapse: separate;
+                border-spacing: 0 15px; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th align='center' style="width:40vh"><h5>게시판 이름</h5></th>
+                        <th align='center' style="width:70vh"><h5>게시판설명</h5></th>
+                        <th align='center' style="width:40vh"><h5>관리하기</h5></th>
+                    </tr>
+                    </thead>
+                    <br/>
+                    {% for category in categorydata %}
+                    {% if not category.Cat_name == '자료실' %}
+                    {% if not category.Cat_name == '익명게시판' %}
+                    <tr style="color:#00b98e;">
+                        <td>{{category.Cat_name}}</td>             
+                        <td align='center'>{{category.Cat_info}}</td>
+                        <td align='center'><span><a class="btn btn-lg btn-primary" href="{% url 'updateCategory' category.Cat_name %}" role="button"
+                            style="font-size:0.8em">설명수정</a>&nbsp;&nbsp;
+                        <a class="btn btn-lg btn-primary" href="{% url 'deleteCategory' category.Cat_name %}" role="button"
+                            style="font-size:0.8em">삭제</a></span></td>               
+                        </tr>
+                    {% endif %}
+                    {% endif %}
+                    {% empty %}
+                            <div style="padding:50px;">
+                                <h5 align='center'>게시판이 없습니다</h5>
+                            </div> 
+                    {% endfor %}
+                    
+                </table>
+            </center>
+        </div>
+        <!-- 자료실 게시글 목록 끝 -->
+{% endblock %}

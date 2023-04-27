@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static %}
+{% block contents %}
+
+
+        <!-- 마스코트걸과 검색창 + 게시판목록은 세션유무에 따라 나와야함(회원만 볼 수 있는 화면) -->
+            <div class="container-xxl bg-primary page-header" style="padding-top:1px; padding-bottom:5px">
+            {% comment %} <div class="row g-5 align-items-center"> {% endcomment %}
+        <div class="container-xxl bg-primary my-6 wow fadeInUp"  data-wow-delay="0.1s">
+            
+            <div class="container px-lg-5" style="margin-left:120px">
+                
+                <div class="row align-items-center" style="height: 250px;">
+                    <div class="col-12 col-md-6">
+                        <h1 class="text-white">{{member.name}}&nbsp;{{member.dept}}
+                        </h1>
+                        <p><br/></p>
+                        <p><small class="text-white">EMAIL &nbsp;&nbsp;{{member.email}}</small></p>
+                        <p><small class="text-white">CLASS &nbsp;&nbsp;{{member.classnames_id}}</small></p>
+                    </div>
+                    
+                    <div class="col-lg-6 text-center text-lg-start">
+                        <div class="col-md-6 text-center mb-n5 d-none d-md-block">
+                            <img class="img-fluid mt-5" style="max-height: 250px; margin-left: 120px" src="{% static 'img/user.png'%}">
+
+                        </div>
+                        
+                    </div>
+                    <p>
+                        <span>
+                        <a href="{% url "editinfo" %}" class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">정보수정</a>&nbsp;&nbsp;
+                        {% if member.dept == '선생님' %}
+                            <a href={% url 'admin_board' %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">게시판관리</a>&nbsp;&nbsp;
+                            <a href={% url 'admin_member' %} class="btn btn-outline-light rounded-pill border-2 py-3 px-5 animated slideInRight">학생관리</a>
+                        {% endif %}
+                        </span>
+                    </p>
+                </div>
+                
+            </div>
+            
+            </div>
+        </div>
+        <!-- 마스코트걸과 검색창끝 -->
+
+        <!-- 메시지 -->
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- 내가 작성한 글 목록 -->
+        
+            <div>
+                    <center>
+                        <h1>
+                            {{tab_title}}
+                        </h1><br/>
+                        <!-- 정렬시작 -->
+                            <form method="GET" action="{% url 'mypage' %}">
+                                <div class="col-4">
+                                    <select name="sort" id="sort" style="font-size:20px;">
+                                        <option value="recently" id="recently">최신순</option>
+                                        <option value="viewcount" id="viewcount">조회순</option>
+                                        <option value="likes" id="likes">추천순</option>
+                                    </select>
+                                    <button class="btn btn-primary" type="submit" value="" >정렬</button>
+                                    {% if tab_title == '내가 추천한 글' %}
+                                        <a class="btn btn-primary" href="{% url 'mypage' %}" role="button" style="font-size:1em">작성글보기</a>
+                                    {% else %}
+                                        <a class="btn btn-primary" href="{% url 'mypage_likes' %}" role="button" style="font-size:1em">추천글보기</a>
+                                    {% endif %}
+                                </div>
+                        <!-- 정렬끝 -->
+                        <table style="width:120vh; border-collapse: separate;
+                        border-spacing: 0 10px;">
+                            
+                            <tr>
+                                <th align='center'>번호</th>
+                                <th align='center' style="width:70vh">제목</th>
+                                <th align='center'>등록일</th>
+                                <th align='center'>조회수</th>
+                                <th align='center'>추천수</th>
+                                <th align='center'>작성자</th>
+                            </tr><br/>
+                            {% for notice in post_list %}
+                            {% if notice.post_fix == True %}
+                            <tr>
+                                <td style="font-weight:bold; color:#B90000;">{{notice.id}}</td>             
+                                <td align='center' style="font-weight:bold; color:#B90000;"><a style="color:#B90000;"href="{% url 'detail' notice.id %}">{{notice.title|truncatechars:45}}</a></td>
+                                <td style="font-weight:bold; color:#B90000;">{{notice.date|date:"y/m/d"}}</td>
+                                <td align='center' style="font-weight:bold; color:#B90000;">{{notice.viewcount}}</td>
+                                <td align='center' style="font-weight:bold; color:#B90000;">{{notice.post_like}}</td>
+                                <td align='center' style="font-weight:bold; color:#B90000;">{{notice.author.name}}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            {% for data in post_list %}
+                            <tr>
+                                <td>{{data.id}}</td>             
+                                <td align='center'><a href="{% url 'detail' data.id %}">{{data.title|truncatechars:45}} 
+                                    {% if data.commentCount == 0 %}
+                                    {% else %}
+                                        [{{data.commentCount}}]
+                                    {% endif %}
+                                </a></td>
+                                <td>{{data.date|date:"y/m/d"}}</td>
+                                <td align='center'>{{data.viewcount}}</td>
+                                <td align='center'>{{data.post_like}}</td>
+                                <td align='center'>{{data.author.name}}</td>
+                            </tr>
+                            
+                            {% empty %}
+                                <div style="padding:50px;">
+                                {% if tab_title == '내가 추천한 글' %}
+                                    <h5 align='center'>아직 추천한 글이 없습니다</h5>
+                                {% else %}
+                                    <h5 align='center'>아직 작성한 글이 없습니다</h5>
+                                {% endif %}
+                                </div>
+                            {% endfor %}
+                        </table>
+                        <br/>
+                    
+                        <!-- 페이징처리 시작 -->
+                        <ul class="pagination justify-content-center">
+                            <!-- 이전페이지 -->
+                            {% if post_list.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ post_list.previous_page_number }}">이전</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+                            </li>
+                            {% endif %}
+                            <!-- 페이지리스트 -->
+                            {% for page_number in post_list.paginator.page_range %}
+                            {% if page_number == post_list.number %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 다음페이지 -->
+                            {% if post_list.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ post_list.next_page_number }}">다음</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <!-- 페이징처리 끝 --> 
+                        <br/>
+                    </form>       
+                    </center>
+
+            </div>
+        <!-- 내가 작성한 글 목록 끝 -->
+{% endblock %}
